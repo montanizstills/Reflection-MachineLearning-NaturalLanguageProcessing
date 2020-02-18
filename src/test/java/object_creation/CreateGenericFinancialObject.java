@@ -1,7 +1,6 @@
 package object_creation;
 
 import com.github.nez.myobject.MyObject;
-import com.github.nez.myobject.MyObjectBuilder;
 import com.github.nez.myobject.financialobjects.Quote;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,12 +14,11 @@ public class CreateGenericFinancialObject<T extends MyObject> {
     public void Test0(){
         //given
         String type = "Quote";
-        Quote myNonGenericExample = new Quote();
 
         //when
-        T myGenericObject = (T) new MyObjectBuilder<>().setTicker(null).createSubclassOfType(type);
+        T myGenericObject = (T) new MyObject<>(null,type);
 
         //then
-        Assert.assertThat(myGenericObject, isA(myNonGenericExample.getClass()));
+        Assert.assertThat(myGenericObject, isA(Quote.class));
     }
 }

@@ -2,12 +2,13 @@
 //
 //import com.git_leon.leonium.browsertools.factories.BrowserHandlerFactory;
 //import org.junit.Test;
+//import org.openqa.selenium.WebDriver;
 //
 //public class testUI {
 //
 //    @Test
 //    public void Test0(){
-//        ebDriver webDriver = BrowserHandlerFactory.FIREFOX.getDriver();
+//        WebDriver webDriver = BrowserHandlerFactory.FIREFOX.getDriver();
 //        SearchPage searchPage = new SearchPage(webDriver);
 //        searchPage.navigateTo();
 //        searchPage.selectLanguage("English");

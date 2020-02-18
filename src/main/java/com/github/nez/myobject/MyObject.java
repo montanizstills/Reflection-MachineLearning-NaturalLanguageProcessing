@@ -21,6 +21,19 @@ public class MyObject<T extends MyObject> {
         this.type=type;
     }
 
+    public T createSubclassOfType(String ticker, String type){
+        try {
+            Class clazz = Class.forName("com.github.nez.myobject.financialobjects."+type);
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            T newInstance = constructor.newInstance();
+            newInstance.setTicker(ticker);
+            newInstance.setType(type);
+            return newInstance;
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new Error(e);
+        }
+    }
+
     public <T extends MyObject> T populateFields() {
         try {
          return (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
@@ -29,9 +42,9 @@ public class MyObject<T extends MyObject> {
         }
     }
 
-    public String getResultOfMethod(String Method){
+    public String getResultOfMethod(String subclassMethod){
         try{
-            Method method = this.getClass().getMethod("get"+Method);
+            Method method = this.getClass().getMethod("get"+subclassMethod);
             return  method.invoke(this,null).toString();
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new Error(e);

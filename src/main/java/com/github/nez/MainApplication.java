@@ -3,20 +3,14 @@ package com.github.nez;
 import com.github.nez.iexapi.IEX;
 import com.github.nez.iexapi.IEXBuilder;
 import com.github.nez.myobject.MyObject;
-import com.github.nez.myobject.MyObjectBuilder;
+import com.github.nez.myobject.financialobjects.Quote;
 
-public class MainApplication {
+public class MainApplication  {
 
-    public  <T extends MyObject> T create(){
+    public <T extends MyObject> T create(String ticker, String type){
 
         //         create the empty financialObject
-        T myObject = (T) new MyObjectBuilder<>().createSubclassOfType("Quote");
-
-        myObject.setTicker("aapl");
-        myObject.setType("quote");
-
-        System.out.println("Ticker is: "+myObject.getTicker());
-        System.out.println("Type is: "+myObject.getType());
+        T myObject = (T) new MyObject<>().createSubclassOfType(ticker,type);
 
         //         create the json
         IEX iex = new IEXBuilder()
@@ -24,21 +18,22 @@ public class MainApplication {
                 .setType(myObject.getType())
                 .createIEX();
         iex.connect();
-        System.out.println(iex.getJson());
 
         //        set the object's json
         myObject.setJson(iex.getJson());
-        System.out.println(myObject.getJson());
 
-        //     use json to fill in the finanicalObject's fields
+        //     use json to fill in the financialObject's fields
         myObject.populateFields();
-        myObject.getResultOfMethod("CompanyName");
+
         return myObject;
     }
 
-    public static void main(String[] args) {
-        Object obj = new MainApplication().create();
-        //        decipherMessage("Hello, $aapl.Earnings.Actual");
+    public static void main(String[] args){
+        MainApplication ma = new MainApplication();
+        MyObject myObject = ma.create("aapl","Quote");
+        System.out.println(myObject.getResultOfMethod("CompanyName"));
+
+//        decipherMessage("Hello, $aapl.Earnings.Actual");
 
     }
 }

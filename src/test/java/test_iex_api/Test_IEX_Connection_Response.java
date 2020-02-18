@@ -14,7 +14,7 @@ public class Test_IEX_Connection_Response {
         IEX myConnection = new IEXBuilder().setTicker("aapl").setType("quote").createIEX();
 
         //when
-        myConnection.connect();
+//        myConnection.connect();
         response = myConnection.getJson();
 
         //then
