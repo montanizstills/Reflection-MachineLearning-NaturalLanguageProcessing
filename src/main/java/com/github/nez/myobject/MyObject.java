@@ -9,7 +9,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-
 public class MyObject<T extends MyObject> {
     private String json;
     private String ticker;
@@ -37,12 +36,32 @@ public class MyObject<T extends MyObject> {
     public T populateFields() {
         try {
 //            this = (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
-//            return this;
 
          return (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
         } catch (IOException e) {
             throw new Error(e);
         }
+    }
+
+    public T createPopulatedObject(String ticker, String type){
+
+        //         create the empty financialObject
+        T myObject = (T) new MyObject<>().createSubclassOfType(ticker,type);
+
+        //         create the json
+        IEX iex = new IEXBuilder()
+                .setTicker(myObject.getTicker())
+                .setType(myObject.getType())
+                .createIEX();
+        iex.connect();
+
+        //        set the object's json
+        myObject.setJson(iex.getJson());
+
+        //     use json to fill in the financialObject's fields
+        // myObject = (T) myObject.populateFields();
+
+        return (T) myObject.populateFields();
     }
 
     public String getResultOfMethod(String subclassMethod){
