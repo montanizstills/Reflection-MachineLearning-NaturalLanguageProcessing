@@ -34,9 +34,14 @@ public class MyObject<T extends MyObject> {
         }
     }
 
-    public <T extends MyObject> T populateFields() {
+    public T populateFields() {
         try {
-         return (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
+           String json = this.getJson();
+           Class clazz = this.getClass();
+            System.out.println(json);
+            System.out.println(clazz);
+
+         return (T) new ObjectMapper().readValue(json,clazz);
         } catch (IOException e) {
             throw new Error(e);
         }
@@ -45,7 +50,8 @@ public class MyObject<T extends MyObject> {
     public String getResultOfMethod(String subclassMethod){
         try{
             Method method = this.getClass().getMethod("get"+subclassMethod);
-            return  method.invoke(this,null).toString();
+            Object x = method.invoke(this,null);
+            return  (String)x;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new Error(e);
         }
