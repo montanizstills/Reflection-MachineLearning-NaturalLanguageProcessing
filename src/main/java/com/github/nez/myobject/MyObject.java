@@ -36,12 +36,10 @@ public class MyObject<T extends MyObject> {
 
     public T populateFields() {
         try {
-           String json = this.getJson();
-           Class clazz = this.getClass();
-            System.out.println(json);
-            System.out.println(clazz);
+//            this = (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
+//            return this;
 
-         return (T) new ObjectMapper().readValue(json,clazz);
+         return (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
         } catch (IOException e) {
             throw new Error(e);
         }

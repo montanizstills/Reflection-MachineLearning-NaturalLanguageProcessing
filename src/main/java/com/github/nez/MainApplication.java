@@ -23,16 +23,15 @@ public class MainApplication<T extends MyObject> {
         myObject.setJson(iex.getJson());
 
         //     use json to fill in the financialObject's fields
-       myObject = (T) myObject.populateFields();
+        // myObject = (T) myObject.populateFields();
 
-        return myObject;
+        return (T) myObject.populateFields();
     }
 
     public static void main(String[] args){
         MainApplication ma = new MainApplication();
+
         MyObject myObject = ma.create("aapl","Quote");
-
-
         System.out.println(myObject.getResultOfMethod("CompanyName"));
 
 //        decipherMessage("Hello, $aapl.Earnings.Actual");
