@@ -5,7 +5,7 @@ import com.github.nez.iexapi.IEXBuilder;
 import com.github.nez.myobject.MyObject;
 import com.github.nez.myobject.financialobjects.Quote;
 
-public class MainApplication  {
+public class MainApplication<T extends MyObject> {
 
     public <T extends MyObject> T create(String ticker, String type){
 
@@ -31,6 +31,10 @@ public class MainApplication  {
     public static void main(String[] args){
         MainApplication ma = new MainApplication();
         MyObject myObject = ma.create("aapl","Quote");
+
+        System.out.println(myObject.getClass());
+        System.out.println(myObject.getJson());
+        System.out.println();
         System.out.println(myObject.getResultOfMethod("CompanyName"));
 
 //        decipherMessage("Hello, $aapl.Earnings.Actual");
