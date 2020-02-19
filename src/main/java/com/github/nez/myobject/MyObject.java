@@ -3,6 +3,8 @@ package com.github.nez.myobject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nez.iexapi.IEX;
 import com.github.nez.iexapi.IEXBuilder;
+import com.github.nez.myobject.financialobjects.Earnings;
+import com.github.nez.myobject.financialobjects.Quote;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -36,7 +38,6 @@ public class MyObject<T extends MyObject> {
     public T populateFields() {
         try {
 //            this = (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
-
          return (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
         } catch (IOException e) {
             throw new Error(e);
@@ -59,16 +60,13 @@ public class MyObject<T extends MyObject> {
         myObject.setJson(iex.getJson());
 
         //     use json to fill in the financialObject's fields
-        // myObject = (T) myObject.populateFields();
-
         return (T) myObject.populateFields();
     }
 
     public String getResultOfMethod(String subclassMethod){
         try{
             Method method = this.getClass().getMethod("get"+subclassMethod);
-            Object x = method.invoke(this,null);
-            return  (String)x;
+            return method.invoke(this,null).toString();
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new Error(e);
         }
