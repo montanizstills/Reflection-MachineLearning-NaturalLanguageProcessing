@@ -36,12 +36,14 @@ public class MyObject<T extends MyObject> {
     public T populateFields() {
         try {
 //            this = (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
-
-         return (T) new ObjectMapper().readValue(this.getJson(),this.getClass());
+//            method() = 5;
+            return (T) new ObjectMapper().readValue(this.getJson(), this.getClass());
         } catch (IOException e) {
             throw new Error(e);
         }
     }
+
+
 
     public T createPopulatedObject(String ticker, String type){
 
