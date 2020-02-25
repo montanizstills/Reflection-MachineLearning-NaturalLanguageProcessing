@@ -3,8 +3,6 @@ package com.github.nez.myobject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nez.iexapi.IEX;
 import com.github.nez.iexapi.IEXBuilder;
-import com.github.nez.myobject.financialobjects.Earnings;
-import com.github.nez.myobject.financialobjects.Quote;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -43,6 +41,8 @@ public class MyObject<T extends MyObject> {
             throw new Error(e);
         }
     }
+
+
 
     public T createPopulatedObject(String ticker, String type){
 
