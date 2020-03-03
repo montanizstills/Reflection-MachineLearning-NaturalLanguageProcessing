@@ -18,6 +18,6 @@ public class SentimentAnalysis {
             String sentiment = sentence.sentiment();
             System.out.println(sentiment+"\t"+sentence);
         }
-        // infering sentiments
+        // inferring sentiments
     }
 }
