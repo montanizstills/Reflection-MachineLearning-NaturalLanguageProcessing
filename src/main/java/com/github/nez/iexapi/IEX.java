@@ -12,7 +12,8 @@ public class IEX {
     private String ticker;
     private InputStream response;
     private String json;
-    private String uncleanURL="https://cloud.iexapis.com/v1/stock/";
+    //"https://cloud.iexapis.com/v1/stock/"
+    private String uncleanURL="https://sandbox.iexapis.com/v1/stock/";
     private URL cleanURL;
     private URLConnection connection;
 
@@ -24,7 +25,7 @@ public class IEX {
     }
 
     public void createURL(){
-        setUncleanURL(this.uncleanURL+this.getTicker()+"/"+this.getType()+"?token="+System.getenv("APP_TOKEN"));
+        setUncleanURL(this.uncleanURL+this.getTicker()+"/"+this.getType()+"?token="+System.getenv("SANDBOX_TOKEN"));
         try {
             this.cleanURL = new URL(this.getUncleanURL());
         } catch (MalformedURLException e) {
@@ -78,7 +79,7 @@ public class IEX {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public String getType() {
-        return type;
+        return type.toLowerCase();
     }
 
     public void setType(String type) {

@@ -1,6 +1,6 @@
 package object_creation;
 
-import com.github.nez.myobject.MyObject;
+import com.github.nez.myobject.FinancialObject;
 import com.github.nez.myobject.financialobjects.Quote;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 
-public class CreateGenericFinancialObject<T extends MyObject> {
+public class CreateGenericFinancialObject<T extends FinancialObject> {
 
     @Test
     public void Test0(){
@@ -16,7 +16,7 @@ public class CreateGenericFinancialObject<T extends MyObject> {
         String type = "Quote";
 
         //when
-        T myGenericObject = (T) new MyObject<>(null,type);
+        T myGenericObject = (T) new FinancialObject<>(null,type);
 
         //then
         Assert.assertThat(myGenericObject, isA(Quote.class));

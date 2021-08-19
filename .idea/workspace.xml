@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:maven" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6d5c92a7-d68f-40d0-b7ee-8e3dacedec4d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/financialobjects/UpcomingEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CRFinal.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CRFinal.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/MainApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/UseCase" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/UseCase" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/iexapi/IEX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/iexapi/IEX.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/ml/MachineLearning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/ml/MachineLearning.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/MyObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/FinancialObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/financialobjects/Earnings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/financialobjects/Earnings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/financialobjects/Quote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/myobject/financialobjects/Quote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/nlp/SentenceRecognizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/nlp/SentenceRecognizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nez/nlp/SentimentAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nez/nlp/SentimentAnalysis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/object_creation/CreateGenericFinancialObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/object_creation/CreateGenericFinancialObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/object_creation/Test_getResultOfMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/object_creation/Test_getResultOfMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/CRFinal.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/MainApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/iexapi/IEX.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/iexapi/IEXBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/ml/MachineLearning.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/myobject/MyObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/myobject/financialobjects/Earnings.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/myobject/financialobjects/Quote.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/Lemma.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/NamedEntityRecognizer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/PartsOfSpeech.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/Pipeline.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/SentenceRecognizer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/SentimentAnalysis.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/github/nez/nlp/Tokenize.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/object_creation/CreateGenericFinancialObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/object_creation/Test_getResultOfMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/test_iex_api/Test_IEXBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/test_iex_api/Test_IEX_Connection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/test_iex_api/Test_IEX_Connection_Response.class" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="JPA Structure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="JPA Structure" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectId" id="1iM4T0Btp6vn5IPsgJlXi3d44CN" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\AppData\Roaming\JetBrains\IntelliJIdea2021.2\scratches" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn install" />
+      <command value="mvn clean" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="MainApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="APP_TOKEN" value="sk_9d1e0123542e44998382b4426c05e2ff" />
+        <env name="SANDBOX_TOKEN" value="Tsk_c9f58ecefc3046c9bd6c1f8cd276e34e" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="com.github.nez.MainApplication" />
+      <module name="stockAnalyzer" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.github.nez.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MainApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6d5c92a7-d68f-40d0-b7ee-8e3dacedec4d" name="Default Changelist" comment="" />
+      <created>1601704135026</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1601704135026</updated>
+      <workItem from="1601704138570" duration="1420000" />
+      <workItem from="1602180611542" duration="14000" />
+      <workItem from="1628451081226" duration="296000" />
+      <workItem from="1628451489893" duration="207000" />
+      <workItem from="1628451737585" duration="2474000" />
+      <workItem from="1628891585319" duration="2316000" />
+      <workItem from="1628969185336" duration="526000" />
+      <workItem from="1628970117045" duration="1370000" />
+      <workItem from="1628971877135" duration="1119000" />
+      <workItem from="1628973076471" duration="6480000" />
+      <workItem from="1628989855321" duration="11502000" />
+      <workItem from="1629045210449" duration="4756000" />
+      <workItem from="1629058910914" duration="5087000" />
+      <workItem from="1629174358540" duration="3999000" />
+      <workItem from="1629336605741" duration="4293000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

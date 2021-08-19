@@ -1,11 +1,11 @@
 package com.github.nez.myobject.financialobjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.github.nez.myobject.MyObject;
+import com.github.nez.myobject.FinancialObject;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-public class Quote extends MyObject {
+public class Quote extends FinancialObject {
     private String symbol;
     private String companyName;
     private String primaryExchange;

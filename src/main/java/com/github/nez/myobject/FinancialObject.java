@@ -9,29 +9,31 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MyObject<T extends MyObject> {
+public class FinancialObject<T extends FinancialObject> {
     private String json;
     private String ticker;
     private String type;
 
-    public MyObject(){}
-    public MyObject(String ticker,String type){
+
+    public FinancialObject(){}
+    public FinancialObject(String ticker, String type){
         this.ticker=ticker;
         this.type=type;
     }
 
-    public T createSubclassOfType(String ticker, String type){
+    public T createSubclassOfType(){
         try {
-            Class clazz = Class.forName("com.github.nez.myobject.financialobjects."+type);
+            Class clazz = Class.forName("com.github.nez.myobject.financialobjects."+this.type);
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             T newInstance = constructor.newInstance();
-            newInstance.setTicker(ticker);
-            newInstance.setType(type);
+            newInstance.setTicker(this.ticker);
+            newInstance.setType(this.type);
             return newInstance;
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new Error(e);
         }
     }
+
 
     public T populateFields() {
         try {
@@ -43,11 +45,10 @@ public class MyObject<T extends MyObject> {
     }
 
 
-
-    public T createPopulatedObject(String ticker, String type){
+    public T createPopulatedObject(){
 
         //         create the empty financialObject
-        T myObject = (T) new MyObject<>().createSubclassOfType(ticker,type);
+        T myObject = (T) new FinancialObject<>().createSubclassOfType();
 
         //         create the json
         IEX iex = new IEXBuilder()
@@ -89,15 +90,17 @@ public class MyObject<T extends MyObject> {
         return ticker;
     }
 
-    public void setTicker(String ticker) {
+    public FinancialObject setTicker(String ticker) {
         this.ticker = ticker;
+        return this;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public FinancialObject setType(String type) {
         this.type = type;
+        return this;
     }
 }

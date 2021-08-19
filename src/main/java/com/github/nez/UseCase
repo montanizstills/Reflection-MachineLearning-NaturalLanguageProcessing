@@ -7,3 +7,9 @@ However we have an issue that we don't know which object to create until the use
 
 - So we use reflection to create an object based on user input and we can use methods of that class
 - this has an advantage of not being able to create the object first
+
+
+hasBeenUpdated = GET /data-points/{symbol} && (sys.time - lastUpdated < 5 minutes)
+https://iexcloud.io/docs/api/#data-points
+
+upcoming-events

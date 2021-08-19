@@ -3,9 +3,9 @@ package com.github.nez.ml;
 //import org.tensorflow.*; find maven repo
 
 public class MachineLearning {
-//Deep nueral networks, find trained models
+//Deep neural networks, find trained models
 
-        void hasAnomaliyOccured(){
+        void hasAnomalyOccurred(){
             boolean war = false;
             //search for instance of the word war
 //             -- sources, time, who is in the war,
