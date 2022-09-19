@@ -2,6 +2,8 @@ package com.github.nez.myobject.financialobjects;
 
 import com.github.nez.myobject.FinancialObject;
 
+import java.beans.ConstructorProperties;
+
 public class Fundamentals extends FinancialObject {
 
     private String accountsPayable;
@@ -186,6 +188,7 @@ public class Fundamentals extends FinancialObject {
     private String subkey;
     private String date;
     private String updated;
+
 
     public Fundamentals(String ticker){
         super(ticker,"Fundamentals");

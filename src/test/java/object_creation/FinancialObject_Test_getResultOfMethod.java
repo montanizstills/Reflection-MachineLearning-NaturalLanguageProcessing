@@ -4,7 +4,7 @@ import com.github.nez.myobject.FinancialObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Test_getResultOfMethod {
+public class FinancialObject_Test_getResultOfMethod {
     @Test
     public void Test0(){
         //given
@@ -12,7 +12,7 @@ public class Test_getResultOfMethod {
         String type = "quote";
         String expected = "Apple, Inc.";
         //when
-        FinancialObject myObject = new FinancialObject().setTicker(ticker).setType(type).createSubclassOfType();
+        FinancialObject myObject = new FinancialObject().setTicker(ticker).setType(type);
         String actual = myObject.getResultOfMethod("CompanyName");
         //then
         Assert.assertEquals(actual,expected);

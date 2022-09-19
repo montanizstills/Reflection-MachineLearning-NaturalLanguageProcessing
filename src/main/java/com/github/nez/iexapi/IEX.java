@@ -1,5 +1,7 @@
 package com.github.nez.iexapi;
 
+import com.github.nez.myobject.FinancialObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -82,16 +84,18 @@ public class IEX {
         return type.toLowerCase();
     }
 
-    public void setType(String type) {
+    public FinancialObject setType(String type) {
         this.type = type;
+        return null;
     }
 
     public String getTicker() {
         return ticker;
     }
 
-    public void setTicker(String ticker) {
+    public FinancialObject setTicker(String ticker) {
         this.ticker = ticker;
+        return null
     }
 
     public InputStream getResponse() {

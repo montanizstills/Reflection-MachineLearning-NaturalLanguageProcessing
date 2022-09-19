@@ -15,6 +15,7 @@ public class MainApplication{
 
         UpcomingEvent wmt = new UpcomingEvent("wmt");
         Fundamentals tgt = new Fundamentals("tgt");
+        System.out.println(tgt.toString());
 //        System.out.println(tgt.getTicker()+" "+tgt.getType());
         tgt.createPopulatedObject();
         System.out.println(tgt.getJson());
