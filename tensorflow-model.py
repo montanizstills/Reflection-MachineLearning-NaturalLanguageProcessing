@@ -42,3 +42,5 @@ predictions = model.predict(x_val)
 # optimizers,
 # normalizing or one-hot encoding,
 # gradient descent algorithm,
+
+# What are the types of unsupervised learning models? What are the types of supervised learning models?
