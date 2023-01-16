@@ -164,6 +164,17 @@ In the context of neural networks, a function refers to a mathematical operation
   - trust-exact 
   - trust-krylov
 
+## Metrics
+- Accuracy: The proportion of correct predictions made by the model. It is a simple and easy-to-understand metric, but it can be misleading when the classes are imbalanced. 
+- Precision: The proportion of true positive predictions among all positive predictions made by the model. This metric is useful for assessing the model's ability to avoid false positives. 
+- Recall: The proportion of true positive predictions among all actual positive instances. This metric is useful for assessing the model's ability to find all relevant instances. 
+- F1-score: The harmonic mean of precision and recall. It is a balance between precision and recall and is useful when both are important.
+- AUC-ROC: The area under the receiver operating characteristic curve. It is a measure of the model's ability to distinguish between positive and negative classes and is useful when the classes are imbalanced. 
+- Confusion Matrix: A table that is used to define the performance of a classification algorithm. It is used to define the number of correct and incorrect predictions made by the algorithm. It gives a more detailed breakdown of the model's performance. 
+- Mean Squared Error (MSE): The mean squared error is a commonly used loss function for regression problems, it measures the average squared difference between the predicted and actual values. 
+- Mean Absolute Error (MAE): The mean absolute error is another commonly used loss function for regression problems, it measures the average absolute difference between the predicted and actual values. 
+- Mean Absolute Percentage Error (MAPE): The mean absolute percentage error is a commonly used loss function for regression problems, it measures the average absolute percentage difference between the predicted and actual values.
+
 # Machine Learning Types
 - Unsupervised
   - Examples of unsupervised learning algorithms include:
@@ -173,3 +184,34 @@ In the context of neural networks, a function refers to a mathematical operation
     - Autoencoders 
     - Generative Adversarial Networks (GANs)
 - Supervised
+
+
+
+
+[//]: # (# TODO:)
+
+[//]: # (# Neural networks&#40;layers&#41;,)
+[//]: # (  # hidden layers??)
+
+[//]: # (    # neurons connected by 'synapses' or weights? what is the relationship?)
+
+[//]: # (# How do I develop new networks?)
+
+[//]: # (# Layer by layer vs cascading networks?)
+
+[//]: # (# Problems with Deep networks?)
+
+[//]: # (# Computational in-efficiency)
+
+[//]: # (# What are layers? What kinds of layers exists? What is a reduction layer? convolutional, pooling, dimensionality reduction layers)
+
+[//]: # ()
+[//]: # (# gradient descent algorithm,)
+
+[//]: # ()
+[//]: # (# What are the types of unsupervised learning models? What are the types of supervised learning models?)
+
+[//]: # (# How to solve over-fitting, where the model memorized data instead of learning generalizable features?)
+
+[//]: # (# Learning rate annealing)
+[//]: # (# Larger data sets require more epochs)
