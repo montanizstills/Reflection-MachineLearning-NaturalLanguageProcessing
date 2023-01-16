@@ -37,10 +37,7 @@ predictions = model.predict(x_val)
     # Problems with Deep networks?
         # Computational in-efficiency
     # What are layers? What kinds of layers exists? What is a reduction layer? convolutional, pooling, dimensionality reduction layers
-# activation function,
-# loss functions,
-# optimizers,
-# normalizing or one-hot encoding,
+
 # gradient descent algorithm,
 
 # What are the types of unsupervised learning models? What are the types of supervised learning models?

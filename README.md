@@ -25,7 +25,9 @@ A neural network is a layer or layers of interconnected neurons connected by syn
   another neuron. The weights are learned during the training process to optimize the performance of the network on a
   specific task.
     - Input Layer: The first layer of the network, which takes the raw input data and feeds it into the network. This
-      layer does not perform any computation; it simply passes the input data to the next layer.
+      layer does not perform any computation; it simply passes the input data to the next layer. Normalizing and One-hot encoding are commonly used to prepare input data for a model.
+      - Normalizing: Normalizing is the process of transforming the values of a variable to a common scale. For example, normalizing a variable between 0 and 1 or between -1 and 1. This allows different variables to be compared on the same scale and can help to improve the performance of a model. Normalizing can be applied to input variables, output variables, or both. There are different ways of normalizing data, such as min-max scaling, z-score normalization, and mean normalization. 
+      - One-hot encoding: One-hot encoding is the process of converting categorical variables into a numerical format that can be used by a machine learning model. It is used when the input data includes categorical variables with a fixed number of possible values. For example, consider a variable that can take on the values "red", "green", "blue". For each possible value of the variable, a new binary variable is created. The value 1 is assigned to the binary variable that corresponds to the original value, and 0 is assigned to the other binary variables. One-hot encoded data can also be used for text classification, where words are one-hot encoded as vectors.
     - Hidden Layer(s): The layers that come after the input layer and before the output layer. These layers perform
       computations on the input data, such as extracting features or making predictions. There can be one or multiple
       hidden layers in a neural network, depending on the complexity of the problem.
@@ -95,11 +97,72 @@ In the context of neural networks, a function refers to a mathematical operation
 - Activation function: Activation functions are used to introduce non-linearity in the network and make it possible to learn more complex representations of the input data. <mark>Non-linearity</mark> refers to the property of a function or a system that does not follow a linear relationship between its inputs and outputs. In the context of neural networks, non-linearity allows the network to learn more complex and expressive representations of the input data. Without non-linearity, a neural network with multiple layers would be equivalent to a single-layer linear model, and would not be able to learn complex patterns in the input data. An activation function is applied to the output of each neuron in a layer to introduce non-linearity in the network. The non-linearity allows the network to learn more complex and expressive representations of the input data. Some common activation functions are the sigmoid function, the ReLU (rectified linear unit) function, and the tanh (hyperbolic tangent) function.
   - Sigmoid: The sigmoid function maps any real-valued number to a value between 0 and 1. It is often used in the output layer of a neural network when the task is binary classification. Strengths: Sigmoid function maps the input to a probability value, making it useful for binary classification tasks. Weaknesses: it's output saturates at large positive and negative inputs, causing the gradients to become very small and making it difficult to train the network. 
   - ReLU (Rectified Linear Unit): The ReLU function maps any negative input value to 0 and any positive input value to itself. It is often used in the hidden layers of a neural network. Strengths: ReLU function is computationally efficient and does not saturate, allowing gradients to propagate well and making it easy to train the network. Weakness: it can suffer from "dying ReLU" problem where a neuron's output is always 0, causing the gradients to become 0 and making it difficult to train that neuron.
-  - tanh (hyperbolic tangent): It is similar to the sigmoid function, but it is centered around 0 and has a slightly different shape. The tanh function is commonly used in hidden layers of a neural network and it is a popular choice for tasks such as image classification and language processing. The tanh function maps input values to the range of -1 to 1, it is commonly used in hidden layers of a neural network. Similar to sigmoid function, it has smooth gradients but it can suffer from saturating activations. Also, the tanh function is sensitive to the scale of the input, which means that it needs to be normalized before being applied, otherwise it could result in a slow or non-convergent training.
+  - tanh (hyperbolic tangent): It is similar to the sigmoid function, but it is centered around 0 and has a slightly different shape. The tanh function is commonly used in hidden layers of a neural network and it is a popular choice for tasks such as image classification and language processing. The tanh function maps input values to the range of -1 to 1, it is commonly used in hidden layers of a neural network. Similar to sigmoid function, it has smooth gradients but it can suffer from saturating activations. Also, the tanh function is sensitive to the scale of the input, which means that it needs to be normalized before being applied, otherwise it could result in a slow or non-convergent training. The tanh function maps input values to the range of -1 to 1 and is similar to the sigmoid function, but it is centered around 0 and has a slightly different shape. It can help to alleviate the vanishing gradient problem, but it can also suffer from saturating activations. In summary, the hyperbolic tangent (tanh) function is a type of activation function that maps input values to the range of -1 to 1, it is a popular choice for tasks such as image classification and language processing, it has smooth gradients, it can break symmetry and help alleviate the vanishing gradient problem, but it can suffer from saturating activations, and it is sensitive to the scale of the input.
+  - Sigmoid: The sigmoid function maps input values to the range of 0 to 1, and it is commonly used in output layers of a neural network where the output is binary or probability-based. It produces a smooth and differentiable output, but it can suffer from saturating activations.  
+  - Softmax: The softmax function maps input values to a probability distribution, where the sum of the output values is 1. It is commonly used in output layers of a neural network where the output is a probability-based. 
+  - Softplus: The softplus function maps input values to a smooth approximation of the ReLU function. It is differentiable, and it is similar to the ReLU function, but it is smooth and it doesn't have the issue of dying neurons. 
+  - Softsign: The softsign function maps input values to a range of -1 to 1. It is differentiable and it is similar to the tanh function, but it is less prone to saturating activations. 
+  - Gaussian: The Gaussian function maps input values to a Gaussian distribution, it is differentiable and its properties are similar to the sigmoid function, but it does not suffer from saturating activations. 
+  - Hard sigmoid: The hard sigmoid function maps input values to a range of 0 to 1, similar to the sigmoid function but it has steeper transition between 0 and 1, which can make the network converge faster. 
+  - Linear: The linear function simply passes the input through, it is commonly used as the activation function in the output layer of linear regression problems. 
+  - Identity: It is similar to the linear function but it is added to emphasize that the output is the same as the input. 
+  - Bent identity: The Bent identity function is similar to the identity function but it has a slightly curved shape, which allows it to have a non-zero derivative at the origin.
+  - ReLU (Rectified Linear Unit): The rectified linear unit is a widely used activation function in neural networks, particularly in hidden layers. It rectifies the input by thresholding negative values to zero, which improves the sparsity of the activations and aids in the optimization process. However, the function may suffer from the "dying ReLU" problem, where a neuron becomes saturated and stops responding to input. 
+  - Leaky ReLU: The Leaky ReLU function is an extension of the traditional ReLU function, which addresses the "dying ReLU" problem by allowing a small, non-zero gradient when the input is negative. This modification allows the gradients to flow through the network even when the input is negative, which can improve the optimization process. 
+  - ELU (Exponential Linear Unit): The exponential linear unit (ELU) is an activation function that addresses the "dying ReLU" problem by allowing a negative value to pass through for negative input values. The function is defined as f(x) = x for x>0 and α(e^x - 1) for x<=0, where α is a hyper-parameter that can be tuned. This modification allows the gradients to flow through the network even when the input is negative, which can improve the optimization process. 
+  - PReLU (Parametric ReLU): The parametric rectified linear unit (PReLU) is an extension of the traditional ReLU function, which addresses the "dying ReLU" problem by allowing a small, non-zero gradient when the input is negative. However, unlike the Leaky ReLU function, the gradient value is a parameter to be learned during training. This allows the network to adaptively learn the best value for the negative input, which can improve the optimization process. 
+  - Selu (Scaled Exponential Linear Unit): The scaled exponential linear unit (SELU) is an activation function that maintains self-normalizing properties in the network. It is defined as f(x) = λx for x>0 and λ(αe^x - α) for x
 
-In summary, the hyperbolic tangent (tanh) function is a type of activation function that maps input values to the range of -1 to 1, it is a popular choice for tasks such as image classification and language processing, it has smooth gradients, it can break symmetry and help alleviate the vanishing gradient problem, but it can suffer from saturating activations, and it is sensitive to the scale of the input.
 - Loss function: Loss functions are used to measure how well the network is performing. A loss function is used to measure the difference between the predicted output of the network and the true output. The loss function provides a scalar value that indicates how well the network is performing on a given input. The goal of training a neural network is to minimize the value of the loss function. Some common loss functions are the mean squared error, the cross-entropy loss, and the hinge loss.
+  - Mean Squared Error (MSE): The mean squared error is a commonly used loss function for regression problems, it measures the average squared difference between the predicted and actual values. It is sensitive to outliers, and it tends to converge to a local minimum.
+  - Mean Absolute Error (MAE):  The mean absolute error is another commonly used loss function for regression problems, it measures the average absolute difference between the predicted and actual values. It is less sensitive to outliers than MSE, and it tends to converge to a global minimum.
+  - Mean Absolute Percentage Error (MAPE)
+  - Mean Squared Logarithmic Error (MSLE)
+  - Binary Cross-Entropy (BCE): The binary cross-entropy loss is a commonly used loss function for binary classification problems, it measures the dissimilarity between the predicted probability distribution and the true distribution. It is used for logistic regression, and it is commonly used for binary classification tasks. It is a smooth and convex function, which makes it easier to optimize.
+  - Categorical Cross-Entropy (CCE)
+  - Sparse Categorical Cross-Entropy (SCCE)
+  - Kullback-Leibler divergence (KLD)
+  - Cosine proximity 
+  - Hinge loss 
+  - Squared Hinge loss 
+  - Categorical Hinge loss 
+  - Log-Cosh loss 
+  - Poisson loss 
+  - Huber loss 
+  - Exponential loss 
+  - Wasserstein loss 
+  - Compute K-means loss 
+  - Triplet loss 
+  - Hinge Embedding loss
+  
 - Optimization functions are used to adjust the network's parameters during training to minimize the value of the loss function. Optimization function: An optimization function is used to adjust the parameters of the network during training. The goal of the optimization function is to find the set of parameters that minimize the value of the loss function. Some common optimization functions are the stochastic gradient descent (SGD), Adam, and Adagrad.
+  - Stochastic Gradient Descent (SGD): Stochastic Gradient Descent is a simple optimization algorithm that updates the model's parameters based on the gradient of the loss function with respect to the parameters, computed on a single training sample. It is computationally efficient, easy to implement and has been widely used in deep learning. However, it may converge to suboptimal solutions because of the stochastic nature of the updates.
+  - Momentum: Momentum is an optimization algorithm that uses the gradient of the loss function with respect to the parameters and a moving average of the previous gradients to update the model's parameters. It helps the optimization process to converge faster by adding a momentum term to the updates, which helps to overcome the oscillations.
+  - Nesterov Momentum 
+  - Adagrad 
+  - Adadelta 
+  - Adam: Adam is an optimization algorithm that uses the gradient of the loss function with respect to the parameters, the moving averages of the past gradients and past squared gradients, to update the model's parameters. It helps the optimization process by adapting the learning rate for each parameter separately, it uses a combination of the momentum and RMSprop methods. It is computationally efficient and has been widely used in deep learning. 
+  - Adamax 
+  - Nadam 
+  - RMSprop 
+  - Ftrl 
+  - L-BFGS 
+  - CG 
+  - BFGS 
+  - L-BFGS-B 
+  - TNC 
+  - COBYLA 
+  - SLSQP 
+  - Nelder-Mead 
+  - Powell 
+  - CG (Conjugate gradient)
+  - Newton-CG 
+  - trust-ncg 
+  - trust-exact 
+  - trust-krylov 
+  - trust-ncg 
+  - trust-exact 
+  - trust-krylov
 
 # Machine Learning Types
 - Unsupervised
