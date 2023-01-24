@@ -12,5 +12,10 @@ my_model = ML_Model(
     metrics=[metrics.Accuracy, metrics.Precision]
 )
 my_model.compile_model()
-my_model.train_model()
+(x_train, y_train), (x_test, y_test) = keras.datasets.imdb.load_data()
+my_model.train_model(
+    training_data_set=(x_train, y_train),
+    expected_training_return_values=(x_test, y_test),
+    training_iterations=10
+)
 predictions = my_model.predict()

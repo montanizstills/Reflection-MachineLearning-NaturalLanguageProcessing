@@ -1,3 +1,4 @@
+import json
 from tensorflow import keras
 
 # 1. Define the model architecture:
@@ -22,6 +23,21 @@ model.fit(x_train, y_train, epochs=10)
 test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
 print('\nTest accuracy:', test_acc)
 
-# 6. Use the model:
-predictions = model.predict(x_test)
-print(predictions)
+# # 6. Use the model:
+# # Accepting input from the user
+# input_image = input("Enter the path of the image: ")
+# image = keras.preprocessing.image.load_img(input_image, target_size=(28, 28))
+# image_array = keras.preprocessing.image.img_to_array(image)
+# image_array = keras.applications.mobilenet.preprocess_input(image_array)
+# image_array = np.expand_dims(image_array, axis=0)
+
+# # Returning a prediction
+# predictions = model.predict(image_array)
+# print("Predicted number: ", np.argmax(predictions))
+
+def lambda_handler(event, context):
+    # TODO implement
+    return {
+        'statusCode': 200,
+        'body': json.dumps(test_loss)
+    }
