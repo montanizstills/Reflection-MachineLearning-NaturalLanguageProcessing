@@ -93,3 +93,9 @@ In summary, the hyperbolic tangent (tanh) function is a type of activation funct
     - Autoencoders 
     - Generative Adversarial Networks (GANs)
 - Supervised
+
+
+
+
+# Statistical Modeling
+- Maximum Likelihood Estimation
