@@ -59,6 +59,11 @@ vi.) remove loss and back-propagate: move choice against/away or minimize gradie
 vii.) optimize ? 
 - gradient based optimization: change over time (vector gradient)
   - For nueral network BiGram model we used W.data+=-10*W.grad. why? this equation?
+- how to determine learning rate? (-0.1*p.grad)
+- how to 'smartly' introduce gradient decay
+
+\
+viii.) train,dev,test splits = 80/10/10
 
 w = 
 

@@ -18,44 +18,47 @@ Each layer in a neural network typically has a number of neurons, where each neu
 
 | Type of Neural Network | Definition |
 |------------------------|------------|
--  <mark> Feedforward Networks </mark>: Are the simplest type of neural network. They consist of an input layer, one or more hidden
-  layers, and an output layer. The information flows in one direction, from input to output, through the layers of
-  neurons. They are used for tasks such as image classification and regression. In short, they are good for problems
-  where the input data is independent of previous inputs
-- <mark> Recurrent Networks </mark>>:  (RNNs) are a type of neural network that are well-suited for sequence data, such as time series
-  data or natural language. RNNs have a feedback connection, which allows information to flow in a circular loop, and
-  the network can maintain a kind of memory of the previous inputs. They are used for tasks such as language processing
-  and speech recognition.
-  
-    - <mark> Bidirectional Recurrent Neural Networks </mark>: (BRNNs) are a type of hybrid neural network that combines the strengths
+- <mark> Feedforward Networks </mark>: Are the simplest type of neural network. They consist of an input layer, one or more hidden layers, and an output layer. The information flows in one direction, from input to output, through the layers of neurons. They are used for tasks such as image classification and regression. In short, they are good for problems where the input data is independent of previous inputs.
+
+
+- <mark> Recurrent Networks </mark>:  (RNNs) are a type of neural network that are well-suited for sequence data, such as time series data or natural language. RNNs have a feedback connection, which allows information to flow in a circular loop, and the network can maintain a kind of memory of the previous inputs. They are used for tasks such as language processing and speech recognition.
+
+    -  <mark> Bidirectional Recurrent Neural Networks </mark>: (BRNNs) are a type of hybrid neural network that combines the strengths
         of both feedforward neural networks and RNNs. BRNNs use two recurrent layers, one processing the input sequence in
         the forward direction and the other processing it in the backward direction. They are commonly used in tasks such
         as natural language processing and speech recognition
     - <mark> Convolutional Networks </mark>: (CNNs) are a type of neural network that are particularly well-suited for image processing tasks. CNNs use convolutional layers, which scan the image with a small window, or kernel, and apply a mathematical operation to the window. This allows the network to learn spatial hierarchies of features, such as edges and shapes, in the image. They are used for tasks such as image classification, object detection and segmentation In short, they are good for problems where the input data is sequential.
-    - U-Net Networks: A type of hybrid neural network that combines the strengths of both CNNs and RNNs. It is an
+
+
+- <mark> U-Net Networks </mark>: A type of hybrid neural network that combines the strengths of both CNNs and RNNs. It is an
       encoder-decoder network that uses convolutional layers to extract features from the input, and recurrent layers to
       propagate those features through the network. They are commonly used in image segmentation tasks such as
       biomedical image segmentation.
-    - Inception Networks: Are a variation of CNNs that were introduced to address the problem of computational
+
+
+- <mark> Inception Networks </mark>: Are a variation of CNNs that were introduced to address the problem of computational
       efficiency in very deep networks. Inception networks use a combination of convolutional, pooling, and
       dimensionality reduction layers to extract features from the input image. They are commonly used in computer
       vision tasks such as image classification and object detection.
 
 
-- Generative Adversarial Networks: (GANs) are a type of neural network that consist of two parts: a generator network
+- <mark> Generative Adversarial Networks (GANs) </mark>:  are a type of neural network that consist of two parts: a generator network
   and a discriminator network. The generator network creates new data, while the discriminator network tries to
   distinguish the generated data from real data. The two networks are trained together in an adversarial process, where
   the generator tries to create data that can fool the discriminator, and the discriminator tries to correctly identify
   the generated data. They are used for tasks such as image generation and style transfer.
-- Autoencoder Networks: A type of neural network that are used for unsupervised learning tasks such as dimensionality
+
+- <mark> Autoencoder Networks </mark>: A type of neural network that are used for unsupervised learning tasks such as dimensionality
   reduction, de-noising and anomaly detection. An autoencoder consists of an encoder that maps the input data to a
   hidden representation, and a decoder that maps the hidden representation back to the original data. The network is
   trained to minimize the difference between the input and the output, forcing the hidden representation to learn a
   compact and informative representation of the input data.
-- Transformer Networks: A type of neural networks used for tasks such as natural language processing, specifically
+
+- <mark> Transformer Networks </mark>: A type of neural networks used for tasks such as natural language processing, specifically
   language understanding and generation. They are based on self-attention mechanisms and are known for their ability to
   process sequential data, like text, without the need for recurrence or convolution.
-- Residual Neural Networks: (ResNets) are a variation of feedforward neural networks that were introduced to address the
+
+- <mark> Residual Neural Networks </mark>: (ResNets) are a variation of feedforward neural networks that were introduced to address the
   problem of vanishing gradients in very deep networks. ResNets add so-called "shortcut connections" between layers,
   allowing the gradients to flow more easily through the network during training. They are commonly used in computer
   vision tasks such as object detection and image classification.
@@ -93,9 +96,3 @@ In summary, the hyperbolic tangent (tanh) function is a type of activation funct
     - Autoencoders 
     - Generative Adversarial Networks (GANs)
 - Supervised
-
-
-
-
-# Statistical Modeling
-- Maximum Likelihood Estimation
