@@ -53,7 +53,8 @@ vi.) remove loss and back-propagate: move choice against/away or minimize gradie
     - loss -> p = -nll/n,
   - Pytorch
     - Cross-Entropy
--  mean-squared-error (regression), 
+-  mean-squared-error (regression),
+- better to have approximate gradient with minibatches and more steps than exact gradient with full dataset and less steps which is computationally expensive.
 
 \
 vii.) optimize ? 
@@ -61,6 +62,7 @@ vii.) optimize ?
   - For nueral network BiGram model we used W.data+=-10*W.grad. why? this equation?
 - how to determine learning rate? (-0.1*p.grad)
 - how to 'smartly' introduce gradient decay
+-  find bottlenecks? do I have enough dimensions to represent the data? in each layer? 
 
 \
 viii.) train,dev,test splits = 80/10/10
