@@ -1,3 +1,5 @@
+[//]: # (Rewrite with LaTex)
+
 ## What is a neural network?
 A neural network is a layer or layers of interconnected neurons connected by synapses (the weights of the system) that work together to perform a specific computation on the input data. In short, information is passed through these layers, transformed, and abstracted, until it reaches its final layer; where a prediction is made. 
 
@@ -14,7 +16,7 @@ Each layer in a neural network typically has a number of neurons, where each neu
     hidden layers in a neural network, depending on the complexity of the problem.
   - Output Layer:  The last layer of the network, which produces the final output of the network. This output could be
     a prediction, a feature representation or any other desired output.
-\
+
 
 | Type of Neural Network | Definition |
 |------------------------|------------|
