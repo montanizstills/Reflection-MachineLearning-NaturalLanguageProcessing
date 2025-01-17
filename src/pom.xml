@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.montanizstills</groupId>
-    <artifactId>Nezonium</artifactId>
-    <version>${nezonium.version}</version>
+    <artifactId>BagOfWords</artifactId>
+    <version>${BagOfWords.version}</version>
 
     <properties>
-        <nezonium.version>0.0.16x</nezonium.version>
+        <BagOfWords.version>0.0.16x</BagOfWords.version>
         <java.version>1.8</java.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -29,13 +29,11 @@
     </developers>
 
     <!--Project Info-->
-    <name>Nezonium - A Selenium Wrapper Framework</name>
+    <name>BagOfWords - A Simple LLM</name>
     <description>
-        A Scalable, Gherkin-like, Selenium-Wrapper framework. Designed to alleviate common web testing nuances, such
-        as: WebDriver Management - downloading drivers, etc.
-        And, leverage Page-Object Modelling design patterns.
+        A simple character-level LLM.
     </description>
-    <url>https://github.com/montanizstills/Nezonium</url>
+    <url>https://github.com/montanizstills/Machine-Learning-Playground</url>
     <licenses>
         <license>
             <name>GPL-3.0</name>
@@ -43,7 +41,7 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/montanizstills/Nezonium</url>
+        <url>https://github.com/montanizstills/BagOfWords</url>
     </scm>
 
     <!--Deployment Info-->
