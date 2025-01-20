@@ -1,17 +1,46 @@
 package io.github.ailearner;
 
+import io.github.ailearner.utils.FileHandler;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MultiLayerPerceptionExample {
 
-    INDArray prepareTrainingData(String file_path) {
-        // {all letters from names.txt}
-        ArrayList X = new ArrayList<>();
-        // return X = unpack_text_data(file_path);
+    INDArray[] prepareTrainingData(String file_path) {
+        Integer blockSize = 3;
+        INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
+        INDArray tensorX = Nd4j.zeros(1, blockSize);
+        INDArray tensorY = Nd4j.zeros(1, 1);
+
+        // create map of idx to alphanumeric char
+        Map<Integer, Object> alphabet = IntStream
+                .rangeClosed('a', 'z')
+                .boxed() //.mapToObj(c -> c), difference?
+                .collect(Collectors.toMap(c -> c - 'a' + 1, c -> c));
+        alphabet.put(0, ".");
+
+        // read all words from names.txt
+        FileHandler fh = new FileHandler();
+        ArrayList allWords = new ArrayList<>();
+        fh.readWordsFromFile(file_path).forEach(word -> {
+            allWords.add(word);
+
+            // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
+            String[] allLettersInAWord = word.toString().split("");
+            Arrays.stream(allLettersInAWord).forEach(letter -> {
+                Integer idx = (Integer) alphabet.get(letter); // hmm, not a fan of this impl;
+                tensorX.add(context);
+                tensorY.add(idx);
+            });
+
+        });
+
         return null;
     }
 
@@ -54,7 +83,7 @@ public class MultiLayerPerceptionExample {
         Integer dimsToSqueeze = 2; // squeeze the first layer input to this dimension;
 
         // get all chars from the names.txt file;
-        ArrayList allCharsX = mlp.prepareTrainingData("/file/path/names.txt");
+        ArrayList allCharsX = null; //mlp.prepareTrainingData("/file/path/names.txt");
 
         // "first layer input" - input to model/neural-net
         // is a vectorX with dims: [len(all_chars_x), hyper_parameter]
@@ -66,11 +95,7 @@ public class MultiLayerPerceptionExample {
         INDArray vectorY = Nd4j.rand(contextLength, numberOfNeurons);
 
         // embedding vector (first layer of our neural net)
-        INDArray C = Nd4j.create(
-                Arrays.asList(vectorX, vectorY),
-                (int) vectorX.shape()[0],
-                (int) vectorY.shape()[1]
-        );
+        INDArray C = Nd4j.create(1);
 
         // get the embedding vector for the given context;
         // Nd4j.create(allCharsX.size()).putScalar(index, 1).mmul(C); //F.one_hot(vectorX, num_classes=len(all_chars_x)).mmuli(C);
@@ -93,16 +118,15 @@ public class MultiLayerPerceptionExample {
     void train() {
         //Prepare Training Data
         prepareTrainingData("file/path/names.txt");
-        this.run(training = true, sampleSize = 100); // if training==true, sampleSize = epochs;
-
+        // this.run(training = true, sampleSize = 10000); // if training==true, sampleSize = epochs;
         // loss function and backpropagation
         // loss = Nd4j.nn().lossFunction(layer2, vectorY);
         // Nd4j.loss().softmaxCrossEntropy(null,vectorY, 0.1);
     }
 
     void sample(Integer sampleSize) {
-        //Sample from the model
-        this.run(training = false, sampleSize); // if training == false, sampleSize = blockSize;
+        // Sample from the model
+        // this.run(training = false, sampleSize); // if training == false, sampleSize = blockSize;
     }
 
 }
