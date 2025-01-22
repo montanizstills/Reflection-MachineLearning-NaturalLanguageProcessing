@@ -11,7 +11,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MultiLayerPerceptionExample {
-
+    /**
+     * Create our X-input and Y-output vectors for Training;
+     *
+     * @param file_path the file to read data from;
+     * @return a Pair consisting of X,Y values;
+     */
     INDArray[] prepareTrainingData(String file_path) {
         Integer blockSize = 3;
         INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
@@ -19,33 +24,46 @@ public class MultiLayerPerceptionExample {
         INDArray tensorY = Nd4j.zeros(1, 1);
 
         // create map of idx to alphanumeric char
-        Map<Integer, Object> alphabet = IntStream
+        Map<String, Integer> charToIntegerAlphabet = IntStream
                 .rangeClosed('a', 'z')
                 .boxed() //.mapToObj(c -> c), difference?
-                .collect(Collectors.toMap(c -> c - 'a' + 1, c -> c));
-        alphabet.put(0, ".");
+                .collect(Collectors.toMap(
+                        // not a fan of  this logic for map; not easily readable;
+                        String::valueOf,
+                        c -> c - 'a' + 1) // 'a' is ASCII value, subtract from c, convert to int, add 1.
+                );
+        charToIntegerAlphabet.put(".", 0);
+
+        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         // read all words from names.txt
         FileHandler fh = new FileHandler();
         ArrayList allWords = new ArrayList<>();
         fh.readWordsFromFile(file_path).forEach(word -> {
             allWords.add(word);
-
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
             String[] allLettersInAWord = word.toString().split("");
             Arrays.stream(allLettersInAWord).forEach(letter -> {
-                Integer idx = (Integer) alphabet.get(letter); // hmm, not a fan of this impl;
+                System.out.println("The current letter under inspection is: " + letter);
+                Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
+                // context = null; // update context;
+                System.out.println(idx);
                 tensorX.add(context);
                 tensorY.add(idx);
             });
-
         });
-
+        System.out.println("X: " + tensorX);
+        System.out.println("Y: " + tensorY);
         return null;
     }
 
     public static void main(String[] args) {
         MultiLayerPerceptionExample mlp = new MultiLayerPerceptionExample();
+        mlp.prepareTrainingData(System.getProperty("user.dir") + "/src/main/java/resources/names.txt");
+        System.exit(1);
 
         /**
          * Goal: For the given context we want to predict the next Y.

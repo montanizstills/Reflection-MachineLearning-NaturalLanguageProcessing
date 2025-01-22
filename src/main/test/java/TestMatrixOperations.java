@@ -19,7 +19,7 @@ public class TestMatrixOperations {
     }
 
     @Test
-    public void TestMatrixShape(){
+    public void TestMatrixShape() {
         INDArray A = Nd4j.create(new double[]{1, 2,}, 2, 2);
         System.out.println(A.shape()[0]);
         assert A.shape()[0] == 2;
