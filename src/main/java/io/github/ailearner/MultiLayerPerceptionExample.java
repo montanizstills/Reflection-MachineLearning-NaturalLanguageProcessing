@@ -133,6 +133,29 @@ public class MultiLayerPerceptionExample {
 
     }
 
+    /**
+     *         Training:
+     *         We need to calc the Negative Log Likelihood. # Manual Impl
+     *         This is: the prob(x|i)/prob(x), i.e, prob of "x" follows "i" divided by gaussian prob of any letter follow "x".
+     *         This is easy in works in our case since we are only predicting the next English letter given some other English Letter.
+     *         Does not scale if {x: x in A} is a large array.
+     *
+     *         OR
+     *
+     *         We need to calc the cross_entropy. # Handles large inputs better
+     *
+     *          Backpropagation:
+     *          Do gradient descent calculus.
+     *
+     *         //Mini Batching??
+     *
+     *         //Sample
+     *         /*
+     *         * Start with seed for predictable results during testing and sampling; do not release into wild with seed.
+     *         * Forward Pass
+     *         * Return Sample
+     *         */
+
     void train() {
         //Prepare Training Data
         prepareTrainingData("file/path/names.txt");
