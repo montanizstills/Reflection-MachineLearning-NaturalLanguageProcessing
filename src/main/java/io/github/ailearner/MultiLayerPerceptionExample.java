@@ -29,7 +29,7 @@ public class MultiLayerPerceptionExample {
                 .boxed() //.mapToObj(c -> c), difference?
                 .collect(Collectors.toMap(
                         // not a fan of  this logic for map; not easily readable;
-                        String::valueOf,
+                        c -> String.valueOf((char) c.intValue()),
                         c -> c - 'a' + 1) // 'a' is ASCII value, subtract from c, convert to int, add 1.
                 );
         charToIntegerAlphabet.put(".", 0);
@@ -47,12 +47,22 @@ public class MultiLayerPerceptionExample {
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
             String[] allLettersInAWord = word.toString().split("");
             Arrays.stream(allLettersInAWord).forEach(letter -> {
-                System.out.println("The current letter under inspection is: " + letter);
+                System.out.println("Current letter: " + letter);
                 Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
-                // context = null; // update context;
-                System.out.println(idx);
-                tensorX.add(context);
-                tensorY.add(idx);
+//                context = Nd4j.concat(
+//                        // add across rows or cols? we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
+//                        0,
+//                        array(1, 2, letter), //vector containing only letter
+//                        // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
+//                        context[1:]);
+//                System.out.println(idx);
+                INDArray newContext = Nd4j.create(new int[]{0,0},1,blockSize);
+                newContext.putScalar(1,2,idx);
+
+                // append updates to each matrix in same order a_1x+=aI_x; b1x+=bI_x
+                context = Nd4j.hstack(context,newContext);
+                tensorY = Nd4j.vstack(tensorY,letter);
+
             });
         });
         System.out.println("X: " + tensorX);
@@ -63,7 +73,16 @@ public class MultiLayerPerceptionExample {
     public static void main(String[] args) {
         MultiLayerPerceptionExample mlp = new MultiLayerPerceptionExample();
         mlp.prepareTrainingData(System.getProperty("user.dir") + "/src/main/java/resources/names.txt");
-        System.exit(1);
+    }
+
+
+    void train() {
+        //Prepare Training Data
+        prepareTrainingData("file/path/names.txt");
+        // this.run(training = true, sampleSize = 10000); // if training==true, sampleSize = epochs;
+        // loss function and backpropagation
+        // loss = Nd4j.nn().lossFunction(layer2, vectorY);
+        // Nd4j.loss().softmaxCrossEntropy(null,vectorY, 0.1);
 
         /**
          * Goal: For the given context we want to predict the next Y.
@@ -130,39 +149,29 @@ public class MultiLayerPerceptionExample {
         // softmax output
         INDArray tokenOut = Nd4j.nn().softmax(layer2); // P(w_i | context);
 
+        /**
+         * Training:
+         * We need to calc the Negative Log Likelihood. # Manual Impl
+         * This is: the prob(x|i)/prob(x), i.e, prob of "x" follows "i" divided by gaussian prob of any letter follow "x".
+         * This is easy in works in our case since we are only predicting the next English letter given some other English Letter.
+         * Does not scale if {x: x in A} is a large array.
+         * <p>
+         * OR
+         * <p>
+         * We need to calc the cross_entropy. # Handles large inputs better
+         * <p>
+         * Backpropagation:
+         * Do gradient descent calculus.
+         * <p>
+         * //Mini Batching??
+         * <p>
+         * //Sample
+         * /*
+         * * Start with seed for predictable results during testing and sampling; do not release into wild with seed.
+         * * Forward Pass
+         * * Return Sample
+         */
 
-    }
-
-    /**
-     *         Training:
-     *         We need to calc the Negative Log Likelihood. # Manual Impl
-     *         This is: the prob(x|i)/prob(x), i.e, prob of "x" follows "i" divided by gaussian prob of any letter follow "x".
-     *         This is easy in works in our case since we are only predicting the next English letter given some other English Letter.
-     *         Does not scale if {x: x in A} is a large array.
-     *
-     *         OR
-     *
-     *         We need to calc the cross_entropy. # Handles large inputs better
-     *
-     *          Backpropagation:
-     *          Do gradient descent calculus.
-     *
-     *         //Mini Batching??
-     *
-     *         //Sample
-     *         /*
-     *         * Start with seed for predictable results during testing and sampling; do not release into wild with seed.
-     *         * Forward Pass
-     *         * Return Sample
-     *         */
-
-    void train() {
-        //Prepare Training Data
-        prepareTrainingData("file/path/names.txt");
-        // this.run(training = true, sampleSize = 10000); // if training==true, sampleSize = epochs;
-        // loss function and backpropagation
-        // loss = Nd4j.nn().lossFunction(layer2, vectorY);
-        // Nd4j.loss().softmaxCrossEntropy(null,vectorY, 0.1);
     }
 
     void sample(Integer sampleSize) {
