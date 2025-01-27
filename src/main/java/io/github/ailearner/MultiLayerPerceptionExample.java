@@ -20,60 +20,53 @@ public class MultiLayerPerceptionExample {
      */
     INDArray[] prepareTrainingData(String file_path) {
         Integer blockSize = 3;
-        INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
         INDArray tensorX = Nd4j.zeros(1, blockSize);
         INDArray tensorY = Nd4j.zeros(1, 1);
 
         // create map of idx to alphanumeric char
-        Map<String, Integer> charToIntegerAlphabet = IntStream
-                .rangeClosed('a', 'z')
-                .boxed() //.mapToObj(c -> c), difference?
+        Map<String, Integer> charToIntegerAlphabet = IntStream.rangeClosed('a', 'z').boxed() //.mapToObj(c -> c), difference?
                 .collect(Collectors.toMap(
                         // not a fan of  this logic for map; not easily readable;
-                        c -> String.valueOf((char) c.intValue()),
-                        c -> c - 'a' + 1) // 'a' is ASCII value, subtract from c, convert to int, add 1.
+                        c -> String.valueOf((char) c.intValue()), c -> c - 'a' + 1) // 'a' is ASCII value, subtract from c, convert to int, add 1.
                 );
         charToIntegerAlphabet.put(".", 0);
 
-        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         // read all words from names.txt
         FileHandler fh = new FileHandler();
-        ArrayList allWords = new ArrayList<>();
+//        ArrayList allWords = new ArrayList<>(); // why are we collecting words?
         fh.readWordsFromFile(file_path).forEach(word -> {
-            allWords.add(word);
+            // reset context
+            INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
+
+            System.out.println("=============");
+            System.out.printf("Word: %s\n", word);
+//            allWords.add(word); // again, why are we collecting words?
 
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
-            Arrays
-                    .stream(word.toString().split(""))
-                    .forEach(letter -> {
-                        System.out.printf("Curr letter: %s\n", letter);
-                        Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
-                        System.out.printf("Curr idx: %d\n", idx);
+            Arrays.stream(word.toString().split("")).forEach(letter -> {
+                Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
+                System.out.printf("Curr: Y: %d, %s\n", idx, letter);
 
-                        // add across rows or cols? we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
-                        // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
-                        // X = [1,3] + []
-                        INDArray newContextVector = context
-                                .get(NDArrayIndex.all(), NDArrayIndex.interval(1, blockSize)) // get "moving array" / slice, aka n-most recent;
-                                .add(
-                                        Nd4j.zeros().putScalar(1, 2, idx) // add new context slice to context vector;
-                                );
+                // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
+                // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
 
-                        // append newContextVector to currContextVector; Nd4j.hstack(col1,col2);
-                        context.addiRowVector(newContextVector);
+                // append newContextVector to currContextVector; Nd4j.hstack(col1,col2);
+                // get "moving array" / slice, aka n-most recent;
+                // add new context slice to context vector; //TODO - correct this math;
+                // append updates to each matrix in same order (x1,y1) + (x2,y2) ->
+                // Ex: a_1x+=aI_x; b1x+=bI_x; Or, Nd4j.vstack(row1,row2)
 
-                        System.out.printf("Curr: Y: %d, %s\n", idx, letter);
-                        // append updates to each matrix in same order (x1,y1) + (x2,y2); Or a_1x+=aI_x; b1x+=bI_x; Nd4j.vstack(row1,row2)
-                        INDArray newOutputVector = tensorY.addi(idx);
-                        tensorY.addiColumnVector(newOutputVector);
-                    });
+                System.out.printf("Context: %s\n", context);
+                System.out.printf("");
+                context.addi(context.get(NDArrayIndex.all(), NDArrayIndex.interval(1, blockSize - 1))); // shift upperbound index;
+                System.out.printf("Context: %s\n", context);
+
+                INDArray newOutputVector = tensorY.addi(idx);
+                tensorY.addiColumnVector(newOutputVector);
+            });
         });
-        System.out.println("X: " + tensorX);
-        System.out.println("Y: " + tensorY);
         return null;
     }
 
@@ -147,10 +140,7 @@ public class MultiLayerPerceptionExample {
         INDArray emb_cX = C.get(vectorX);
 
         // second layer of our neural net, fully connected to C[X[i]];
-        INDArray layer1 = Nd4j.rand(
-                (int) vectorX.shape()[0],
-                numberOfNeurons
-        );
+        INDArray layer1 = Nd4j.rand((int) vectorX.shape()[0], numberOfNeurons);
         INDArray layer2 = Nd4j.nn().tanh(layer1); // fully connected to C;
 
         // softmax output
