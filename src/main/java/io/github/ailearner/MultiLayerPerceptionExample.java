@@ -3,6 +3,7 @@ package io.github.ailearner;
 import io.github.ailearner.utils.FileHandler;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,26 +45,32 @@ public class MultiLayerPerceptionExample {
         ArrayList allWords = new ArrayList<>();
         fh.readWordsFromFile(file_path).forEach(word -> {
             allWords.add(word);
+
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
-            String[] allLettersInAWord = word.toString().split("");
-            Arrays.stream(allLettersInAWord).forEach(letter -> {
-                System.out.println("Current letter: " + letter);
-                Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
-//                context = Nd4j.concat(
-//                        // add across rows or cols? we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
-//                        0,
-//                        array(1, 2, letter), //vector containing only letter
-//                        // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
-//                        context[1:]);
-//                System.out.println(idx);
-                INDArray newContext = Nd4j.create(new int[]{0,0},1,blockSize);
-                newContext.putScalar(1,2,idx);
+            Arrays
+                    .stream(word.toString().split(""))
+                    .forEach(letter -> {
+                        System.out.printf("Curr letter: %s\n", letter);
+                        Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
+                        System.out.printf("Curr idx: %d\n", idx);
 
-                // append updates to each matrix in same order a_1x+=aI_x; b1x+=bI_x
-                context = Nd4j.hstack(context,newContext);
-                tensorY = Nd4j.vstack(tensorY,letter);
+                        // add across rows or cols? we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
+                        // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
+                        // X = [1,3] + []
+                        INDArray newContextVector = context
+                                .get(NDArrayIndex.all(), NDArrayIndex.interval(1, blockSize)) // get "moving array" / slice, aka n-most recent;
+                                .add(
+                                        Nd4j.zeros().putScalar(1, 2, idx) // add new context slice to context vector;
+                                );
 
-            });
+                        // append newContextVector to currContextVector; Nd4j.hstack(col1,col2);
+                        context.addiRowVector(newContextVector);
+
+                        System.out.printf("Curr: Y: %d, %s\n", idx, letter);
+                        // append updates to each matrix in same order (x1,y1) + (x2,y2); Or a_1x+=aI_x; b1x+=bI_x; Nd4j.vstack(row1,row2)
+                        INDArray newOutputVector = tensorY.addi(idx);
+                        tensorY.addiColumnVector(newOutputVector);
+                    });
         });
         System.out.println("X: " + tensorX);
         System.out.println("Y: " + tensorY);

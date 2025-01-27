@@ -43,4 +43,12 @@ public class TestMatrixOperations {
 
         assert false;
     }
+
+    @Test
+    public void TestNd4jSuite(){
+        INDArray originalArray = Nd4j.linspace(1,15,15).reshape('c',3,5);
+        System.out.println("Original Array:");
+        System.out.println(originalArray);
+
+    }
 }
