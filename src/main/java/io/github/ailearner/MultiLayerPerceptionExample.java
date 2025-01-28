@@ -7,6 +7,7 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -23,23 +24,27 @@ public class MultiLayerPerceptionExample {
         INDArray tensorX = Nd4j.zeros(1, blockSize);
         INDArray tensorY = Nd4j.zeros(1, 1);
 
-        // create map of idx to alphanumeric char
-        Map<String, Integer> charToIntegerAlphabet = IntStream.rangeClosed('a', 'z').boxed() //.mapToObj(c -> c), difference?
+        Map<String, Integer> charToIntegerAlphabet = IntStream.rangeClosed('a', 'z')
+                .boxed() //.mapToObj(c -> c), difference?
                 .collect(Collectors.toMap(
                         // not a fan of  this logic for map; not easily readable;
                         c -> String.valueOf((char) c.intValue()), c -> c - 'a' + 1) // 'a' is ASCII value, subtract from c, convert to int, add 1.
                 );
+        // create map of idx to alphanumeric char
         charToIntegerAlphabet.put(".", 0);
 
-        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet
+                .entrySet()
+                .stream()
+                .collect(
+                        Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)
+                );
 
         // read all words from names.txt
         FileHandler fh = new FileHandler();
 //        ArrayList allWords = new ArrayList<>(); // why are we collecting words?
-        fh.readWordsFromFile(file_path).forEach(word -> {
-            // reset context
-            INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
 
+        fh.readWordsFromFile(file_path).forEach(word -> {
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
 //            allWords.add(word); // again, why are we collecting words?
@@ -47,10 +52,14 @@ public class MultiLayerPerceptionExample {
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
             Arrays.stream(word.toString().split("")).forEach(letter -> {
                 Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
-                System.out.printf("Curr: Y: %d, %s\n", idx, letter);
+                System.out.printf("Curr Y: %d, %s\n", idx, letter);
 
                 // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
                 // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
+
+                INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
+                INDArray slice = tensorX.slice(1);
+                context.addi(slice);
 
                 // append newContextVector to currContextVector; Nd4j.hstack(col1,col2);
                 // get "moving array" / slice, aka n-most recent;
@@ -59,13 +68,15 @@ public class MultiLayerPerceptionExample {
                 // Ex: a_1x+=aI_x; b1x+=bI_x; Or, Nd4j.vstack(row1,row2)
 
                 System.out.printf("Context: %s\n", context);
-                System.out.printf("");
-                context.addi(context.get(NDArrayIndex.all(), NDArrayIndex.interval(1, blockSize - 1))); // shift upperbound index;
-                System.out.printf("Context: %s\n", context);
 
-                INDArray newOutputVector = tensorY.addi(idx);
-                tensorY.addiColumnVector(newOutputVector);
+                // if context0 = [0,0,0], then context1 = [context[1:],'e'], -> contextN = [context[1:],letter]
+//                tensorX.addi(context.get(NDArrayIndex.all(), NDArrayIndex.interval(1, blockSize - 1))); // shift upperbound index;
+//                System.out.printf("Context: %s\n", context);
+//
+//                INDArray newOutputVector = tensorY.addi(idx);
+//                tensorY.addiColumnVector(newOutputVector);
             });
+            System.exit(1);
         });
         return null;
     }
