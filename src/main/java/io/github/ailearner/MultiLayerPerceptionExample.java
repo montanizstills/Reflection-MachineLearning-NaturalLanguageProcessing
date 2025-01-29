@@ -7,7 +7,6 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -33,33 +32,69 @@ public class MultiLayerPerceptionExample {
         // create map of idx to alphanumeric char
         charToIntegerAlphabet.put(".", 0);
 
-        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet
-                .entrySet()
-                .stream()
-                .collect(
-                        Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey)
-                );
+        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         // read all words from names.txt
         FileHandler fh = new FileHandler();
-//        ArrayList allWords = new ArrayList<>(); // why are we collecting words?
 
         fh.readWordsFromFile(file_path).forEach(word -> {
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
-//            allWords.add(word); // again, why are we collecting words?
 
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
             Arrays.stream(word.toString().split("")).forEach(letter -> {
                 Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
                 System.out.printf("Curr Y: %d, %s\n", idx, letter);
 
-                // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]]
+                // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]], like: INDArray context = tensorX[1:]+[0, 0, idx]
                 // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
 
-                INDArray context = Nd4j.zeros(1, blockSize); // very computationally expensive to know nRows up front;
-                INDArray slice = tensorX.slice(1);
-                context.addi(slice);
+                // so lets start with a new context vector each iter;
+                INDArray slice = Nd4j.zeros(1, 3);
+
+                // OPTION 1:
+                // slice.putScalar(new int[]{0, blockSize - 1}, 0); // first elem
+                // slice.putScalar(new int[]{1, blockSize - 1}, 0); // second elem
+                // slice.putScalar(new int[]{2, blockSize - 1}, idx); // third elem
+
+                // OPTION 2:
+                // OR first and second elem can be appended in one operation;
+                // slice.get(slice_index).put(both_values);
+                // slice.putScalar(new int[]{2, blockSize - 1}, idx); // third elem
+
+                // OPTION 3:
+                // OR take slice of last row then dup and change dup val for positions: [0],[1],[2] -> [0,0,idx];
+                INDArray tensorXSlice = tensorX
+                        .get(
+                                NDArrayIndex.point(0), // rows of INDArray
+                                NDArrayIndex.all() // cols of INDArray
+                        ); // .put(indices, newINDArray); // get(row,col);
+
+                slice.dup().putRow();
+
+                INDArray updatedContext = null;
+                tensorX.addiRowVector(updatedContext);
+
+                System.out.printf("Context: %s\n", context);
+                System.out.printf("Context: %s\n", slice);
+                System.exit(1);
+
+
+                // then we will update a partial-slice on this vector
+                // INDArray slice = tensorX.get(NDArrayIndex.interval(1, blockSize - 1)); // slice of tensorX or tensorX[0:n-1]
+
+                // but how do we update only the (1,3) pos. on this 1x3 array, or the very last pos in the vector;
+                // REMEMBER: indexing starts at 0! So, 1st pos. = 0, last pos. = n-1
+                INDArray ex = tensorX.putScalar(new int[]{0, blockSize - 1}, idx);
+
+                // now we will combine the two vectors TensorX and Context along the first dim: 1x3
+                // tensorX = Nd4j.concat(blockSize - 1, tensorX, context);
+
+
+                // Nd4j.hstack(tensorX, slice); // ultimate goal;
+
+
+                context.putScalar(1, 1, idx);
 
                 // append newContextVector to currContextVector; Nd4j.hstack(col1,col2);
                 // get "moving array" / slice, aka n-most recent;
