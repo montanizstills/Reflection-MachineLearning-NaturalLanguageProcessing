@@ -1,6 +1,11 @@
+package io.github.ailearner;
+
 import org.junit.jupiter.api.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
+
+import java.util.Arrays;
 
 public class TestMatrixOperations {
 
@@ -49,6 +54,12 @@ public class TestMatrixOperations {
         INDArray originalArray = Nd4j.linspace(1,15,15).reshape('c',3,5);
         System.out.println("Original Array:");
         System.out.println(originalArray);
+        System.out.println();
+
+        // hacky, try more linearly algebraic solution
+//        System.out.println(originalArray.get(NDArrayIndex.indices(-0)).getColumns(0,1,2));
+        // hacky, bc we know the dataset, but prob a more elegant sol. exists for our case
+        System.out.println(originalArray.get(NDArrayIndex.indices(0)).get(NDArrayIndex.indices(1)));
 
     }
 }

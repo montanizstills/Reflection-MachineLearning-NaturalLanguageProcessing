@@ -1,3 +1,5 @@
+package io.github.ailearner;
+
 import io.github.ailearner.utils.FileHandler;
 import org.junit.jupiter.api.Test;
 

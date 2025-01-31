@@ -37,79 +37,55 @@ public class MultiLayerPerceptionExample {
         // read all words from names.txt
         FileHandler fh = new FileHandler();
 
+
         fh.readWordsFromFile(file_path).forEach(word -> {
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
 
+            // update X, Y: append updates to each matrix (X,Y) in same order (x1,y1) + (x2,y2).
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
+            // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]], like: INDArray context = tensorX[1:]+[0, 0, idx]
             Arrays.stream(word.toString().split("")).forEach(letter -> {
                 Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
                 System.out.printf("Curr Y: %d, %s\n", idx, letter);
 
-                // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]], like: INDArray context = tensorX[1:]+[0, 0, idx]
-                // all context up to position context[blockSize], because blockSize is the amount of context we are considering;
-
                 // so lets start with a new context vector each iter;
+                INDArray context = Nd4j.zeros(1, 3);
                 INDArray slice = Nd4j.zeros(1, 3);
 
-                // OPTION 1:
-                // slice.putScalar(new int[]{0, blockSize - 1}, 0); // first elem
-                // slice.putScalar(new int[]{1, blockSize - 1}, 0); // second elem
-                // slice.putScalar(new int[]{2, blockSize - 1}, idx); // third elem
+                // OPTION 1: update each elem individually, then add to TensorX
+                // a.)
+                // slice.putScalar(new int[]{0, 2}, idx); // third elem
+                // slice.putScalar(new int[]{0, 1}, 0); // second elem
+                // slice.putScalar(new int[]{0, 0}, 0); // first elem
 
-                // OPTION 2:
-                // OR first and second elem can be appended in one operation;
-                // slice.get(slice_index).put(both_values);
-                // slice.putScalar(new int[]{2, blockSize - 1}, idx); // third elem
-
-                // OPTION 3:
-                // OR take slice of last row then dup and change dup val for positions: [0],[1],[2] -> [0,0,idx];
-                INDArray tensorXSlice = tensorX
-                        .get(
-                                NDArrayIndex.point(0), // rows of INDArray
-                                NDArrayIndex.all() // cols of INDArray
-                        ); // .put(indices, newINDArray); // get(row,col);
-
-                slice.dup().putRow();
-
-                INDArray updatedContext = null;
-                tensorX.addiRowVector(updatedContext);
-
-                System.out.printf("Context: %s\n", context);
-                System.out.printf("Context: %s\n", slice);
-                System.exit(1);
+                // b.)
+                // **Note: addi() and addiRowVector produces same results, why? addiColumn vector columns of matrix shape mismatch;
+                // Nd4j.vstack(tensorX,slice);
 
 
-                // then we will update a partial-slice on this vector
-                // INDArray slice = tensorX.get(NDArrayIndex.interval(1, blockSize - 1)); // slice of tensorX or tensorX[0:n-1]
+                // OPTION 2: first and second elem can be appended in one operation.
+                // OR, slice.get(slice_index).put(val1,val2);
 
-                // but how do we update only the (1,3) pos. on this 1x3 array, or the very last pos in the vector;
-                // REMEMBER: indexing starts at 0! So, 1st pos. = 0, last pos. = n-1
-                INDArray ex = tensorX.putScalar(new int[]{0, blockSize - 1}, idx);
-
-                // now we will combine the two vectors TensorX and Context along the first dim: 1x3
-                // tensorX = Nd4j.concat(blockSize - 1, tensorX, context);
+                // hacky, try more linearly algebraic solution
+                // slice.get(NDArrayIndex.indices(-0)).getColumns(0, 1, 2);
+                // slice.putScalar(new int[]{0, 2}, idx); // last elem
+                // System.out.println(Nd4j.vstack(tensorX, slice));
 
 
-                // Nd4j.hstack(tensorX, slice); // ultimate goal;
+                // OPTION 3: take slice of last row then dup and change dup val for positions: [0],[1],[2] -> [prev,prev,idx];
+                slice = tensorX
+                        .get(NDArrayIndex.indices(-1))
+                        // hacky, bc we know the dataset, but prob a more elegant sol. exists for our case
+                        // also need more prac with library
+                        .get(NDArrayIndex.indices(1));
+                //  INDArray tensorXSlice = tensorX.get(NDArrayIndex.point(tensorX.length() - 1), NDArrayIndex.all());
+                // Nd4j.vstack(tensorX,slice);
 
 
-                context.putScalar(1, 1, idx);
+                System.out.printf("TensorX: %s\n", tensorX);
 
-                // append newContextVector to currContextVector; Nd4j.hstack(col1,col2);
-                // get "moving array" / slice, aka n-most recent;
-                // add new context slice to context vector; //TODO - correct this math;
-                // append updates to each matrix in same order (x1,y1) + (x2,y2) ->
-                // Ex: a_1x+=aI_x; b1x+=bI_x; Or, Nd4j.vstack(row1,row2)
 
-                System.out.printf("Context: %s\n", context);
-
-                // if context0 = [0,0,0], then context1 = [context[1:],'e'], -> contextN = [context[1:],letter]
-//                tensorX.addi(context.get(NDArrayIndex.all(), NDArrayIndex.interval(1, blockSize - 1))); // shift upperbound index;
-//                System.out.printf("Context: %s\n", context);
-//
-//                INDArray newOutputVector = tensorY.addi(idx);
-//                tensorY.addiColumnVector(newOutputVector);
             });
             System.exit(1);
         });
