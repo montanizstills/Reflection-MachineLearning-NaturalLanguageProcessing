@@ -1,15 +1,17 @@
 package io.github.ailearner;
 
 import io.github.ailearner.utils.FileHandler;
+import io.github.ailearner.utils.NNTrainingDataHelper;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class MultiLayerPerceptionExample {
     /**
@@ -20,53 +22,44 @@ public class MultiLayerPerceptionExample {
      */
     INDArray[] prepareTrainingData(String file_path) {
         final int blockSize = 3;
-        INDArray tensorX = Nd4j.zeros(1, blockSize);
-        INDArray tensorY = Nd4j.zeros(1, 1);
+        final INDArray tensorX = Nd4j.zeros(1, blockSize); // 1st dim size is len(allPossibleContexts+1)
+        final INDArray tensorY = Nd4j.zeros(1, 1); // 2nd dim size is len(allPossibleContexts+1)
+        final FileHandler fh = new FileHandler();
 
-        Map<String, Integer> charToIntegerAlphabet = IntStream.rangeClosed('a', 'z')
-                .boxed() //.mapToObj(c -> c), difference?
-                .collect(Collectors.toMap(
-                        // not a fan of  this logic for map; not easily readable;
-                        // 'a' is ASCII value, subtract from c, convert to int, add 1.
-                        c -> String.valueOf((char) c.intValue()), c -> c - 'a' + 1)
-                );
-        // create map of idx to alphanumeric char
-        charToIntegerAlphabet.put(".", 0);
+        final Function<String, Integer> idxSupplier = (letter) -> new NNTrainingDataHelper().createCharToIdxMap().get(letter);
+        final Supplier<INDArray> mostPrevSliceSupplier = () -> tensorX.get(NDArrayIndex.indices(-1)).get(NDArrayIndex.indices(1));
+        final BiFunction<INDArray, Integer, INDArray> newSliceGenerator = (inputSlice, idx) -> inputSlice.putScalar(new int[]{0, blockSize - 1}, idx);
+        ;
 
-        Map<Integer, String> integerToCharAlphabet = charToIntegerAlphabet.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
         // read all words from names.txt
-        FileHandler fh = new FileHandler();
-
-
         fh.readWordsFromFile(file_path).forEach(word -> {
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
 
+            // add [0,0,0] context vector on init; if using VStack, does not need this step
+            // tensorX.putiRowVector(Nd4j.zeros(0,3));
 
-            // update X, Y: append updates to each matrix (X,Y) in same order (x1,y1) + (x2,y2).
-            // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
-            // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]], like: INDArray context = tensorX[1:]+[0, 0, idx]
+            List<INDArray> currWordContextTensorsList = new ArrayList<>();
+
             Arrays.stream(word.toString().split("")).forEach(letter -> {
-                final Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
-                System.out.printf("Curr Y: %d, %s\n", idx, letter);
+                final Integer idx = idxSupplier.apply(letter);
+                final INDArray slice = newSliceGenerator.apply(mostPrevSliceSupplier.get(), idx);
 
-                // TODO: Find value of first dim for nth iteraton; need to set the tensorX vector first dim: (x,3)
-                //  Add all context vectors to ArrayList then create INDArray from ArrayList
-                // so lets start with a new context vector each iter;
-                final INDArray slice = tensorX
-                        .get(NDArrayIndex.indices(-1))
-                        // hacky, bc we know the dataset, but prob a more elegant sol. exists for our case
-                        // also need more prac with library
-                        .get(NDArrayIndex.indices(1)); // left-shift of all elements, replacing nth with 0;
-                slice.putScalar(new int[]{0,blockSize-1},idx);
-                tensorX.putiRowVector(slice); // Nd4j.vstack(tensorX, slice); // tensorX.putiRowVector(slice);
-                System.out.printf("TensorX: %s\n", tensorX);
+                // need to know tensorX vector first dim: (x,3) or this op will overwrite nth dim val;
+                // wonky behavior but achieves goal with next 2 immediate lines coupled;
+                tensorX.putiRowVector(slice);
+                currWordContextTensorsList.add(slice);
+
             });
-//            System.out.printf("TensorX: %s\n", tensorX);
+            Nd4j.create(currWordContextTensorsList, currWordContextTensorsList.size(), 3);
             System.exit(1);
         });
         return null;
+    }
+
+    void getMostRecentContextVector() {
+
     }
 
     public static void main(String[] args) {
@@ -174,5 +167,6 @@ public class MultiLayerPerceptionExample {
         // Sample from the model
         // this.run(training = false, sampleSize); // if training == false, sampleSize = blockSize;
     }
+
 
 }
