@@ -7,7 +7,6 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -22,7 +21,6 @@ public class MultiLayerPerceptionExample {
     INDArray[] prepareTrainingData(String file_path) {
         final int blockSize = 3;
         INDArray tensorX = Nd4j.zeros(1, blockSize);
-        List arrTensorX = new ArrayList<>();
         INDArray tensorY = Nd4j.zeros(1, 1);
 
         Map<String, Integer> charToIntegerAlphabet = IntStream.rangeClosed('a', 'z')
@@ -61,9 +59,11 @@ public class MultiLayerPerceptionExample {
                         // hacky, bc we know the dataset, but prob a more elegant sol. exists for our case
                         // also need more prac with library
                         .get(NDArrayIndex.indices(1)); // left-shift of all elements, replacing nth with 0;
-                tensorX.putiRowVector(slice); // Nd4j.vstack(tensorX,slice)
+                slice.putScalar(new int[]{0,blockSize-1},idx);
+                tensorX.putiRowVector(slice); // Nd4j.vstack(tensorX, slice); // tensorX.putiRowVector(slice);
+                System.out.printf("TensorX: %s\n", tensorX);
             });
-
+//            System.out.printf("TensorX: %s\n", tensorX);
             System.exit(1);
         });
         return null;
