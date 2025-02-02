@@ -7,6 +7,7 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,15 +20,17 @@ public class MultiLayerPerceptionExample {
      * @return a Pair consisting of X,Y values;
      */
     INDArray[] prepareTrainingData(String file_path) {
-        Integer blockSize = 3;
+        final int blockSize = 3;
         INDArray tensorX = Nd4j.zeros(1, blockSize);
+        List arrTensorX = new ArrayList<>();
         INDArray tensorY = Nd4j.zeros(1, 1);
 
         Map<String, Integer> charToIntegerAlphabet = IntStream.rangeClosed('a', 'z')
                 .boxed() //.mapToObj(c -> c), difference?
                 .collect(Collectors.toMap(
                         // not a fan of  this logic for map; not easily readable;
-                        c -> String.valueOf((char) c.intValue()), c -> c - 'a' + 1) // 'a' is ASCII value, subtract from c, convert to int, add 1.
+                        // 'a' is ASCII value, subtract from c, convert to int, add 1.
+                        c -> String.valueOf((char) c.intValue()), c -> c - 'a' + 1)
                 );
         // create map of idx to alphanumeric char
         charToIntegerAlphabet.put(".", 0);
@@ -42,51 +45,25 @@ public class MultiLayerPerceptionExample {
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
 
+
             // update X, Y: append updates to each matrix (X,Y) in same order (x1,y1) + (x2,y2).
             // add array of len(context) to X for each letter in "word", where: len(context) == blockSize
             // we want to stack [[0,0,0],[0,0,5],[0,5,13]...[13,1,0]], like: INDArray context = tensorX[1:]+[0, 0, idx]
             Arrays.stream(word.toString().split("")).forEach(letter -> {
-                Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
+                final Integer idx = charToIntegerAlphabet.get(letter);  // not a fan of this impl;
                 System.out.printf("Curr Y: %d, %s\n", idx, letter);
 
+                // TODO: Find value of first dim for nth iteraton; need to set the tensorX vector first dim: (x,3)
+                //  Add all context vectors to ArrayList then create INDArray from ArrayList
                 // so lets start with a new context vector each iter;
-                INDArray context = Nd4j.zeros(1, 3);
-                INDArray slice = Nd4j.zeros(1, 3);
-
-                // OPTION 1: update each elem individually, then add to TensorX
-                // a.)
-                // slice.putScalar(new int[]{0, 2}, idx); // third elem
-                // slice.putScalar(new int[]{0, 1}, 0); // second elem
-                // slice.putScalar(new int[]{0, 0}, 0); // first elem
-
-                // b.)
-                // **Note: addi() and addiRowVector produces same results, why? addiColumn vector columns of matrix shape mismatch;
-                // Nd4j.vstack(tensorX,slice);
-
-
-                // OPTION 2: first and second elem can be appended in one operation.
-                // OR, slice.get(slice_index).put(val1,val2);
-
-                // hacky, try more linearly algebraic solution
-                // slice.get(NDArrayIndex.indices(-0)).getColumns(0, 1, 2);
-                // slice.putScalar(new int[]{0, 2}, idx); // last elem
-                // System.out.println(Nd4j.vstack(tensorX, slice));
-
-
-                // OPTION 3: take slice of last row then dup and change dup val for positions: [0],[1],[2] -> [prev,prev,idx];
-                slice = tensorX
+                final INDArray slice = tensorX
                         .get(NDArrayIndex.indices(-1))
                         // hacky, bc we know the dataset, but prob a more elegant sol. exists for our case
                         // also need more prac with library
-                        .get(NDArrayIndex.indices(1));
-                //  INDArray tensorXSlice = tensorX.get(NDArrayIndex.point(tensorX.length() - 1), NDArrayIndex.all());
-                // Nd4j.vstack(tensorX,slice);
-
-
-                System.out.printf("TensorX: %s\n", tensorX);
-
-
+                        .get(NDArrayIndex.indices(1)); // left-shift of all elements, replacing nth with 0;
+                tensorX.putiRowVector(slice); // Nd4j.vstack(tensorX,slice)
             });
+
             System.exit(1);
         });
         return null;
