@@ -2,16 +2,16 @@ package io.github.ailearner;
 
 import io.github.ailearner.utils.FileHandler;
 import io.github.ailearner.utils.NNTrainingDataHelper;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.BiFunction;
+import java.util.Vector;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class MultiLayerPerceptionExample {
     /**
@@ -20,47 +20,39 @@ public class MultiLayerPerceptionExample {
      * @param file_path the file to read data from;
      * @return a Pair consisting of X,Y values;
      */
-    INDArray[] prepareTrainingData(String file_path) {
+    public Pair<Vector, Vector> prepareTrainingData(String file_path) {
         final int blockSize = 3;
-        final INDArray tensorX = Nd4j.zeros(1, blockSize); // 1st dim size is len(allPossibleContexts+1)
-        final INDArray tensorY = Nd4j.zeros(1, 1); // 2nd dim size is len(allPossibleContexts+1)
+        final Vector<INDArray> tensorX = new Vector<>();
+        final Vector<Integer> tensorY = new Vector<>();
+        final INDArray context = Nd4j.zeros(1, 3);
+
+        //final Pair<Vector, Vector> XYPair = new ImmutablePair<>(tensorX, tensorY);
         final FileHandler fh = new FileHandler();
 
-        final Function<String, Integer> idxSupplier = (letter) -> new NNTrainingDataHelper().createCharToIdxMap().get(letter);
-        final Supplier<INDArray> mostPrevSliceSupplier = () -> tensorX.get(NDArrayIndex.indices(-1)).get(NDArrayIndex.indices(1));
-        final BiFunction<INDArray, Integer, INDArray> newSliceGenerator = (inputSlice, idx) -> inputSlice.putScalar(new int[]{0, blockSize - 1}, idx);
-        ;
-
+        // BagOfWordsNN.charToIdxMap.get(letter)
+        final Function<String, Integer> charMapIdxSupplier = (letter) -> new NNTrainingDataHelper().createCharToIdxMap().get(letter);
 
         // read all words from names.txt
-        fh.readWordsFromFile(file_path).forEach(word -> {
+        fh.readWordsFromFile(file_path).forEach((word) -> {
+            word += "."; // add END_TOKEN
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
-
-            // add [0,0,0] context vector on init; if using VStack, does not need this step
-            // tensorX.putiRowVector(Nd4j.zeros(0,3));
-
-            List<INDArray> currWordContextTensorsList = new ArrayList<>();
-
-            Arrays.stream(word.toString().split("")).forEach(letter -> {
-                final Integer idx = idxSupplier.apply(letter);
-                final INDArray slice = newSliceGenerator.apply(mostPrevSliceSupplier.get(), idx);
-
-                // need to know tensorX vector first dim: (x,3) or this op will overwrite nth dim val;
-                // wonky behavior but achieves goal with next 2 immediate lines coupled;
-                tensorX.putiRowVector(slice);
-                currWordContextTensorsList.add(slice);
-
+            final String[] lettersOfCurrentWord = word.split(""); // would like to remove;
+            IntStream.range(0, (lettersOfCurrentWord.length)).forEach(iteration -> {
+                System.out.printf("Given: %s --> Expect: %s\n", context, charMapIdxSupplier.apply(lettersOfCurrentWord[iteration]));
+                int idx = charMapIdxSupplier.apply(lettersOfCurrentWord[iteration]);
+                tensorX.add(context.dup()); // add dup to avoid changing underlying array later in program
+                tensorY.add(charMapIdxSupplier.apply(lettersOfCurrentWord[iteration]));
+                context.putiRowVector(context.get(NDArrayIndex.indices(-1)).get(NDArrayIndex.indices(1)).putScalar(new int[]{0, blockSize - 1}, idx)); // update context vector;
             });
-            Nd4j.create(currWordContextTensorsList, currWordContextTensorsList.size(), 3);
+            System.out.println(tensorX);
+            System.out.println(tensorY);
             System.exit(1);
+            return;
         });
-        return null;
+        return new ImmutablePair<>(tensorX, tensorY);
     }
 
-    void getMostRecentContextVector() {
-
-    }
 
     public static void main(String[] args) {
         MultiLayerPerceptionExample mlp = new MultiLayerPerceptionExample();
