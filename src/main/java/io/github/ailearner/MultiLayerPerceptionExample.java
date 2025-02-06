@@ -9,47 +9,51 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
 public class MultiLayerPerceptionExample {
+
     /**
      * Create our X-input and Y-output vectors for Training;
      *
      * @param file_path the file to read data from;
      * @return a Pair consisting of X,Y values;
      */
-    public Pair<Vector, Vector> prepareTrainingData(String file_path) {
+    public Pair<LinkedList, LinkedList> prepareTrainingData(String file_path) {
         final int blockSize = 3;
-        final Vector<INDArray> tensorX = new Vector<>();
-        final Vector<Integer> tensorY = new Vector<>();
-        final INDArray context = Nd4j.zeros(1, 3);
+        final LinkedList<INDArray> tensorX = new LinkedList<>();
+        final LinkedList<Integer> tensorY = new LinkedList<>();
+        final INDArray xContext = Nd4j.zeros(1, 3);
 
         //final Pair<Vector, Vector> XYPair = new ImmutablePair<>(tensorX, tensorY);
         final FileHandler fh = new FileHandler();
 
         // BagOfWordsNN.charToIdxMap.get(letter)
-        final Function<String, Integer> charMapIdxSupplier = (letter) -> new NNTrainingDataHelper().createCharToIdxMap().get(letter);
+        final Function<String, Integer> charMap_to_IdxSupplier = (letter) -> new NNTrainingDataHelper().createCharToIdxMap().get(letter);
 
         // read all words from names.txt
         fh.readWordsFromFile(file_path).forEach((word) -> {
-            word += "."; // add END_TOKEN
+            word = word + "."; // add END_TOKEN
             System.out.println("=============");
             System.out.printf("Word: %s\n", word);
             final String[] lettersOfCurrentWord = word.split(""); // would like to remove;
-            IntStream.range(0, (lettersOfCurrentWord.length)).forEach(iteration -> {
-                System.out.printf("Given: %s --> Expect: %s\n", context, charMapIdxSupplier.apply(lettersOfCurrentWord[iteration]));
-                int idx = charMapIdxSupplier.apply(lettersOfCurrentWord[iteration]);
-                tensorX.add(context.dup()); // add dup to avoid changing underlying array later in program
-                tensorY.add(charMapIdxSupplier.apply(lettersOfCurrentWord[iteration]));
-                context.putiRowVector(context.get(NDArrayIndex.indices(-1)).get(NDArrayIndex.indices(1)).putScalar(new int[]{0, blockSize - 1}, idx)); // update context vector;
+            IntStream.range(0, (lettersOfCurrentWord.length)).forEach(chxInWord -> {
+                System.out.printf("Given: %s --> Expect: %s\n", xContext, charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]));
+                int idx = charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]);
+                tensorX.add(xContext.dup()); // add dup to avoid changing underlying array later in program
+                tensorY.add(charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]));
+                xContext.putiRowVector(xContext.get(NDArrayIndex.indices(-1)).get(NDArrayIndex.indices(1)).putScalar(new int[]{0, blockSize - 1}, idx)); // update context vector;
             });
-            System.out.println(tensorX);
-            System.out.println(tensorY);
-            System.exit(1);
-            return;
+            // reset context after END_TOKEN rec'd;
+            xContext.putiRowVector(Nd4j.zeros(1, 3));
+
+            System.out.printf("TensorX: %s\n", tensorX);
+            System.out.printf("TensorY: %s\n", tensorY);
         });
+
+        // Need to validate <K,V> (key value) of X and Y relationship, respectively, remains integrable
         return new ImmutablePair<>(tensorX, tensorY);
     }
 
