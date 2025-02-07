@@ -21,48 +21,52 @@ public class MultiLayerPerceptionExample {
      * @param file_path the file to read data from;
      * @return a Pair consisting of X,Y values;
      */
-    public Pair<LinkedList, LinkedList> prepareTrainingData(String file_path) {
+    public Pair<INDArray, INDArray> prepareTrainingData(String file_path) {
         final int blockSize = 3;
         final LinkedList<INDArray> tensorX = new LinkedList<>();
         final LinkedList<Integer> tensorY = new LinkedList<>();
         final INDArray xContext = Nd4j.zeros(1, 3);
-
-        //final Pair<Vector, Vector> XYPair = new ImmutablePair<>(tensorX, tensorY);
         final FileHandler fh = new FileHandler();
-
-        // BagOfWordsNN.charToIdxMap.get(letter)
+        // BagOfWordsNN.charToIdxMap.get(letter) -- prefer this expression
         final Function<String, Integer> charMap_to_IdxSupplier = (letter) -> new NNTrainingDataHelper().createCharToIdxMap().get(letter);
+
 
         // read all words from names.txt
         fh.readWordsFromFile(file_path).forEach((word) -> {
             word = word + "."; // add END_TOKEN
-            System.out.println("=============");
-            System.out.printf("Word: %s\n", word);
-            final String[] lettersOfCurrentWord = word.split(""); // would like to remove;
+            // System.out.println("=============");
+            // System.out.printf("Word: %s\n", word);
+            final String[] lettersOfCurrentWord = word.split("");
             IntStream.range(0, (lettersOfCurrentWord.length)).forEach(chxInWord -> {
-                System.out.printf("Given: %s --> Expect: %s\n", xContext, charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]));
+                // System.out.printf("Given: %s --> Expect: %s\n", xContext, charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]));
                 int idx = charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]);
                 tensorX.add(xContext.dup()); // add dup to avoid changing underlying array later in program
                 tensorY.add(charMap_to_IdxSupplier.apply(lettersOfCurrentWord[chxInWord]));
-                xContext.putiRowVector(xContext.get(NDArrayIndex.indices(-1)).get(NDArrayIndex.indices(1)).putScalar(new int[]{0, blockSize - 1}, idx)); // update context vector;
+                // update context vector;
+                xContext.putiRowVector(xContext
+                        .get(NDArrayIndex.indices(-1))
+                        .get(NDArrayIndex.indices(1))
+                        .putScalar(new int[]{0, blockSize - 1}, idx)
+                );
             });
             // reset context after END_TOKEN rec'd;
             xContext.putiRowVector(Nd4j.zeros(1, 3));
-
-            System.out.printf("TensorX: %s\n", tensorX);
-            System.out.printf("TensorY: %s\n", tensorY);
         });
-
-        // Need to validate <K,V> (key value) of X and Y relationship, respectively, remains integrable
-        return new ImmutablePair<>(tensorX, tensorY);
+        // long startTime = System.currentTimeMillis();
+        INDArray dl4jTensorX = Nd4j.create(tensorX, tensorX.size(), 3); // very heavy task - takes FOREVER!!
+        // long endTime = System.currentTimeMillis();
+        // System.out.printf("Created Nd4j TensorX in %d ms\n", endTime - startTime);
+        INDArray dl4jTensorY = Nd4j.create(tensorY);
+        return new ImmutablePair<>(dl4jTensorX, dl4jTensorY);
     }
-
 
     public static void main(String[] args) {
         MultiLayerPerceptionExample mlp = new MultiLayerPerceptionExample();
-        mlp.prepareTrainingData(System.getProperty("user.dir") + "/src/main/java/resources/names.txt");
+        // long startTime = System.currentTimeMillis();
+        Pair<INDArray, INDArray> XY = mlp.prepareTrainingData(System.getProperty("user.dir") + "/src/main/java/resources/names.txt");
+        // long endTime = System.currentTimeMillis();
+        // System.out.printf("Training Completed in %d ms\n", endTime - startTime);
     }
-
 
     void train() {
         //Prepare Training Data
